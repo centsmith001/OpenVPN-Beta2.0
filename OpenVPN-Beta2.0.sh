@@ -4,10 +4,10 @@ rm OpenVPN-Beta.sh
  source /etc/os-release
 if [[ "$ID" != 'debian' ]]; then
  echo -e "[\e[1;31mError\e[0m] OS not supported, exting..." 
- exit 0
+ exit 1
 fi
 
- # Now check if our machine is in root user, if not, this script exits
+#Now check if our machine is in root user, if not, this script exits
  
  #Some workaround for OpenVZ machines for "Startup error" openvpn service
  if [[ "$(hostnamectl | grep -i Virtualization | awk '{print $2}' | head -n1)" == 'openvz' ]]; then
