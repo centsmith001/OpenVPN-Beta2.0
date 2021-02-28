@@ -60,7 +60,6 @@ sysctl -p
  openssl dhparam -out /etc/openvpn/dh.pem 1024
 #Install Openvpn
 apt-get install openvpn -y
-mkdir /etc/openvpn/easy-rsa/keys
 cp -r /usr/share/easy-rsa /etc/openvpn/
  # Some workaround for OpenVZ machines for "Startup error" openvpn service
  if [[ "$(hostnamectl | grep -i Virtualization | awk '{print $2}' | head -n1)" == 'openvz' ]]; then
@@ -69,8 +68,6 @@ cp -r /usr/share/easy-rsa /etc/openvpn/
 fi
 #unzip server.crt.gz
 gunzip /usr/share/doc/openvpn/examples/sample-keys/server.crt.gz
-#make directory for client.ovpn
-mkdir /etc/openvpn/client/
 #Setup CA
 cat <<EOT3>> /usr/share/doc/openvpn/examples/sample-keys/ca.crt
 -----BEGIN CERTIFICATE-----
