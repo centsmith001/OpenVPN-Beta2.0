@@ -1,6 +1,6 @@
 #!/bin/bash
 apt-get update && apt-get upgrade -y
-rm OpenVPN-BetaV2.0.sh
+rm OpenVPN-Beta.sh
  # First thing to do is check if this machine is Debian
  source /etc/os-release
 if [[ "$ID" != 'debian' ]]; then
@@ -265,8 +265,6 @@ group nogroup
 log-append /var/log/openvpn.log
 verb 2
 EOT1
-#make directory for client.ovpn
-mkdir /etc/openvpn/client/
 #Configure Openvpn Client
 cat <<EOT2>> /etc/openvpn/client/client.ovpn
 client
@@ -292,4 +290,3 @@ EOT2
 systemctl start openvpn@server
 systemctl enable openvpn@server
 systemctl status openvpn@server
-q
