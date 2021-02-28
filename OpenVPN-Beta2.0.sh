@@ -3,7 +3,6 @@
  # First thing to do is check if this machine is Debian
  source /etc/os-release
 if [[ "$ID" != 'debian' ]]; then
- ScriptMessage
  echo -e "[\e[1;31mError\e[0m] OS not supported, exting..." 
  exit 1
 fi
