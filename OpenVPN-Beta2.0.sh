@@ -1,5 +1,5 @@
 #!/bin/bash
-
+rm OpenVPN-Beta2.0
  # First thing to do is check if this machine is Debian
  source /etc/os-release
 if [[ "$ID" != 'debian' ]]; then
@@ -291,4 +291,3 @@ systemctl start openvpn@server
 systemctl enable openvpn@server
 systemctl status openvpn@server
 q
-rm OpenVPN-Beta2.0
