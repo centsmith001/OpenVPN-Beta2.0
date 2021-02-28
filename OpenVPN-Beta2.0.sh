@@ -1,4 +1,5 @@
 #!/bin/bash
+apt-get update && apt-get upgrade
 rm OpenVPN-Beta.sh
  # First thing to do is check if this machine is Debian
  source /etc/os-release
