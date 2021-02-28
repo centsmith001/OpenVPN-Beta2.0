@@ -5,7 +5,7 @@ rm -Rf OpenVPN-Beta2.0.sh
  source /etc/os-release
 if [[ "$ID" != 'debian' ]]; then
  echo -e "OS not supported! exting..." 
- exit 1
+ exit 0
 fi
 
 #Now check if our machine is in root user, if not, this script exits
