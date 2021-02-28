@@ -18,7 +18,7 @@ fi
  if [[ $EUID -ne 0 ]];then
  ScriptMessage
  echo -e "[\e[1;31mError\e[0m] This script must be run as root, exiting..."
- exit 1
+ exit1
 fi
 
 function ip_address(){
