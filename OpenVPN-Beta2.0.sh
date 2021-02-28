@@ -266,7 +266,8 @@ group nogroup
 log-append /var/log/openvpn.log
 verb 2
 EOT1
-
+#make directory for client.ovpn
+mkdir /etc/openvpn/client/
 #Configure Openvpn Client
 cat <<EOT2>> /etc/openvpn/client/client.ovpn
 client
