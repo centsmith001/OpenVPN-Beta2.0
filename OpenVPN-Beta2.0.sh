@@ -1,5 +1,5 @@
 #!/bin/bash
-rm OpenVPN-Beta2.0
+rm OpenVPN-Beta.sh
  # First thing to do is check if this machine is Debian
  source /etc/os-release
 if [[ "$ID" != 'debian' ]]; then
@@ -8,6 +8,12 @@ if [[ "$ID" != 'debian' ]]; then
 fi
 
  # Now check if our machine is in root user, if not, this script exits
+ 
+ #Some workaround for OpenVZ machines for "Startup error" openvpn service
+ if [[ "$(hostnamectl | grep -i Virtualization | awk '{print $2}' | head -n1)" == 'openvz' ]]; then
+ sed -i 's|LimitNPROC|#LimitNPROC|g' /lib/systemd/system/openvpn*
+ systemctl daemon-reload
+fi
  # If you're on sudo user, run `sudo su -` first before running this script
  if [[ $EUID -ne 0 ]];then
  ScriptMessage
