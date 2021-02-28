@@ -59,7 +59,7 @@ sysctl -p
  # Enabling IPv4 Forwarding
  echo 1 > /proc/sys/net/ipv4/ip_forward
 # Generating openvpn dh.pem file using openssl
- openssl dhparam -out /etc/openvpn/dh.pem 1024
+ openssl dhparam -out /etc/openvpn/dh.pem 2048
 #Install Openvpn
 apt-get install openvpn -y
 mkdir /etc/openvpn/easy-rsa/keys
@@ -290,4 +290,3 @@ EOT2
 systemctl start openvpn@server
 systemctl enable openvpn@server
 systemctl status openvpn@server
-q
