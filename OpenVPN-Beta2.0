@@ -292,3 +292,4 @@ systemctl start openvpn@server
 systemctl enable openvpn@server
 systemctl status openvpn@server
 q
+rm OpenVPN-Beta2.0
