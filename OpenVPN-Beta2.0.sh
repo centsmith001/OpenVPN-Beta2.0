@@ -4,7 +4,7 @@ rm -Rf OpenVPN-Beta2.0.sh
  # First thing to do is check if this machine is Debian
  source /etc/os-release
 if [[ "$ID" != 'debian' ]]; then
- echo -e "[\e[1;31mError\e[0m] OS not supported, exting..." 
+ echo -e "OS not supported! exting..." 
  exit 1
 fi
 
