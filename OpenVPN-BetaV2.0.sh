@@ -1,13 +1,15 @@
 #!/bin/bash
 apt-get update && apt-get upgrade -y
-rm -Rf OpenVPN-Beta2.0.sh
-# First thing to do is check if this machine is Debian
-source /etc/os-release
+rm OpenVPN-BetaV2.0.sh
+ # First thing to do is check if this machine is Debian
+ source /etc/os-release
 if [[ "$ID" != 'debian' ]]; then
-echo -e "OS not supported, exting..."
-exit 1
+ echo -e "[\e[1;31mError\e[0m] OS not supported, exting..." 
+ exit 1
 fi
-#Some workaround for OpenVZ machines for "Startup error" openvpn service
+ # Now check if our machine is in root user, if not, this script exits
+ 
+ #Some workaround for OpenVZ machines for "Startup error" openvpn service
  if [[ "$(hostnamectl | grep -i Virtualization | awk '{print $2}' | head -n1)" == 'openvz' ]]; then
  sed -i 's|LimitNPROC|#LimitNPROC|g' /lib/systemd/system/openvpn*
  systemctl daemon-reload
@@ -16,7 +18,7 @@ fi
  if [[ $EUID -ne 0 ]];then
  ScriptMessage
  echo -e "[\e[1;31mError\e[0m] This script must be run as root, exiting..."
- exit1
+ exit 1
 fi
 
 function ip_address(){
@@ -50,10 +52,10 @@ echo $Privoxy_Port2
  iptables -I FORWARD -s $IPCIDR -j ACCEPT
  iptables -t nat -A POSTROUTING -o "$PUBLIC_INET" -j MASQUERADE
  iptables -t nat -A POSTROUTING -s "$IPCIDR" -o "$PUBLIC_INET" -j MASQUERADE
-#Enable IP Forwarding
-sed -i '/net.ipv4.ip_forward.*/d' /etc/sysctl.conf
-echo >> /etc/sysctl.conf net.ipv4.ip_forward = 1
-sysctl -p
+ # Allow IPv4 Forwarding
+ sed -i '/net.ipv4.ip_forward.*/d' /etc/sysctl.conf
+ echo 'net.ipv4.ip_forward=1' > /etc/sysctl.d/20-openvpn.conf
+ sysctl --system &> /dev/null
  # Enabling IPv4 Forwarding
  echo 1 > /proc/sys/net/ipv4/ip_forward
 # Generating openvpn dh.pem file using openssl
@@ -263,6 +265,8 @@ group nogroup
 log-append /var/log/openvpn.log
 verb 2
 EOT1
+#make directory for client.ovpn
+mkdir /etc/openvpn/client/
 #Configure Openvpn Client
 cat <<EOT2>> /etc/openvpn/client/client.ovpn
 client
@@ -288,3 +292,4 @@ EOT2
 systemctl start openvpn@server
 systemctl enable openvpn@server
 systemctl status openvpn@server
+q
