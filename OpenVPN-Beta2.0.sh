@@ -46,14 +46,6 @@ Privoxy_Port1='8080'
 echo $Privoxy_Port1
 Privoxy_Port2='8000'
 echo $Privoxy_Port2
-#Install ufw and enable ports
-apt-get install ufw -y
-ufw allow 110/tcp
-ufw allow 8080/tcp
-ufw allow 8000/tcp
-ufw allow OpenSSH
-ufw disable
-ufw enable
  # Iptables Rule for OpenVPN server
  PUBLIC_INET="$(ip -4 route ls | grep default | grep -Po '(?<=dev )(\S+)' | head -1)"
  IPCIDR='10.200.0.0/16'
@@ -64,6 +56,8 @@ ufw enable
 sed -i '/net.ipv4.ip_forward.*/d' /etc/sysctl.conf
 echo >> /etc/sysctl.conf net.ipv4.ip_forward = 1
 sysctl -p
+ # Enabling IPv4 Forwarding
+ echo 1 > /proc/sys/net/ipv4/ip_forward
 # Generating openvpn dh.pem file using openssl
  openssl dhparam -out /etc/openvpn/dh.pem 1024
 #Install Openvpn
