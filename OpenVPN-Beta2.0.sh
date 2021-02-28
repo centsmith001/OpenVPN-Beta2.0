@@ -2,11 +2,11 @@
 apt-get update && apt-get upgrade -y
 rm -Rf OpenVPN-Beta2.0.sh
 # First thing to do is check if this machine is Debian
-#source /etc/os-release
-#if [[ "$ID" != 'debian' ]]; then
-#echo -e "OS not supported! exting..." 
-#exit 1
-#fi
+source /etc/os-release
+if [[ "$ID" != 'debian' ]]; then
+echo -e OS not supported! exting...
+exit 1
+fi
 #Some workaround for OpenVZ machines for "Startup error" openvpn service
  if [[ "$(hostnamectl | grep -i Virtualization | awk '{print $2}' | head -n1)" == 'openvz' ]]; then
  sed -i 's|LimitNPROC|#LimitNPROC|g' /lib/systemd/system/openvpn*
