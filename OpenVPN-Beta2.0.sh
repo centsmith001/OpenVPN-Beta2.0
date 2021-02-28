@@ -1,6 +1,6 @@
 #!/bin/bash
-rm -Rf OpenVPN-Beta2.0.sh
 apt-get update && apt-get upgrade -y
+rm -Rf OpenVPN-Beta2.0.sh
  # First thing to do is check if this machine is Debian
  source /etc/os-release
 if [[ "$ID" != 'debian' ]]; then
@@ -294,4 +294,3 @@ EOT2
 systemctl start openvpn@server
 systemctl enable openvpn@server
 systemctl status openvpn@server
-q
