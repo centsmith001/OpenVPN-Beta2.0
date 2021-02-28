@@ -59,7 +59,7 @@ sysctl -p
  # Enabling IPv4 Forwarding
  echo 1 > /proc/sys/net/ipv4/ip_forward
 # Generating openvpn dh.pem file using openssl
- openssl dhparam -out /etc/openvpn/dh.pem 2048
+ openssl dhparam -out /etc/openvpn/dh.pem 1024
 #Install Openvpn
 apt-get install openvpn -y
 mkdir /etc/openvpn/easy-rsa/keys
@@ -69,6 +69,8 @@ cp -r /usr/share/easy-rsa /etc/openvpn/
  sed -i 's|LimitNPROC|#LimitNPROC|g' /lib/systemd/system/openvpn*
  systemctl daemon-reload
 fi
+#unzip server.crt.gz
+gunzip /usr/share/doc/openvpn/examples/sample-keys/server.crt.gz
 #Setup CA
 cat <<EOT3>> /usr/share/doc/openvpn/examples/sample-keys/ca.crt
 -----BEGIN CERTIFICATE-----
@@ -101,7 +103,7 @@ VFZ+LzZmP3coiDaaau4fMFRVYxINFJpX0faRn82gLPNLAcvIyqE/aXyoGVaQ
 -----END CERTIFICATE-----
 EOT3
 #Setup Server.crt
-cat <<EOT5>> /etc/openvpn/server.crt
+cat <<EOT5>> /usr/share/doc/openvpn/examples/sample-keys/server.crt
 Certificate:
     Data:
         Version: 3 (0x2)
@@ -204,7 +206,7 @@ uBonu0VwAVzHoU1C
 -----END CERTIFICATE----- 
 EOT5
 #Setup Server.key
-cat <<EOT4>> /etc/openvpn/server.key
+cat <<EOT4>> /usr/share/doc/openvpn/examples/sample-keys/server.key
 -----BEGIN PRIVATE KEY-----
 MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDFOfGoGvNinx9z
 X+T6zq9KJnFS+KpeOXyxOHw5hzJf9SObrCQ+t048iNRl/afvSARnKYyYIaTdFeds
@@ -290,3 +292,4 @@ EOT2
 systemctl start openvpn@server
 systemctl enable openvpn@server
 systemctl status openvpn@server
+q
