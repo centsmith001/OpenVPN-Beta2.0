@@ -71,6 +71,8 @@ cp -r /usr/share/easy-rsa /etc/openvpn/
 fi
 #unzip server.crt.gz
 gunzip /usr/share/doc/openvpn/examples/sample-keys/server.crt.gz
+#make directory for client.ovpn
+mkdir /etc/openvpn/client/
 #Setup CA
 cat <<EOT3>> /usr/share/doc/openvpn/examples/sample-keys/ca.crt
 -----BEGIN CERTIFICATE-----
@@ -266,8 +268,6 @@ group nogroup
 log-append /var/log/openvpn.log
 verb 2
 EOT1
-#make directory for client.ovpn
-mkdir /etc/openvpn/client/
 #Configure Openvpn Client
 cat <<EOT2>> /etc/openvpn/client/client.ovpn
 client
