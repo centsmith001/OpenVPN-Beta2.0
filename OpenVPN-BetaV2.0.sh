@@ -1,14 +1,12 @@
 #!/bin/bash
 apt-get update && apt-get upgrade -y
-rm OpenVPN-Beta.sh
+rm OpenVPN-BetaV2.0.sh
  # First thing to do is check if this machine is Debian
  source /etc/os-release
 if [[ "$ID" != 'debian' ]]; then
  echo -e "[\e[1;31mError\e[0m] OS not supported, exting..." 
  exit 1
 fi
- # Now check if our machine is in root user, if not, this script exits
- 
  #Some workaround for OpenVZ machines for "Startup error" openvpn service
  if [[ "$(hostnamectl | grep -i Virtualization | awk '{print $2}' | head -n1)" == 'openvz' ]]; then
  sed -i 's|LimitNPROC|#LimitNPROC|g' /lib/systemd/system/openvpn*
@@ -52,6 +50,11 @@ echo $Privoxy_Port2
  iptables -I FORWARD -s $IPCIDR -j ACCEPT
  iptables -t nat -A POSTROUTING -o "$PUBLIC_INET" -j MASQUERADE
  iptables -t nat -A POSTROUTING -s "$IPCIDR" -o "$PUBLIC_INET" -j MASQUERADE
+ # Some workaround for OpenVZ machines for "Startup error" openvpn service
+ if [[ "$(hostnamectl | grep -i Virtualization | awk '{print $2}' | head -n1)" == 'openvz' ]]; then
+ sed -i 's|LimitNPROC|#LimitNPROC|g' /lib/systemd/system/openvpn*
+ systemctl daemon-reload
+fi
  # Allow IPv4 Forwarding
  sed -i '/net.ipv4.ip_forward.*/d' /etc/sysctl.conf
  echo 'net.ipv4.ip_forward=1' > /etc/sysctl.d/20-openvpn.conf
@@ -60,19 +63,25 @@ echo $Privoxy_Port2
  echo 1 > /proc/sys/net/ipv4/ip_forward
 # Generating openvpn dh.pem file using openssl
  openssl dhparam -out /etc/openvpn/dh.pem 1024
+ # Checking if openvpn folder is accidentally deleted or purged
+ if [[ ! -e /etc/openvpn ]]; then
+  mkdir -p /etc/openvpn
+ fi
+ # Removing all existing openvpn server files
+ rm -rf /etc/openvpn/*
+
 #Install Openvpn
 apt-get install openvpn -y
 cp -r /usr/share/easy-rsa /etc/openvpn/
- # Some workaround for OpenVZ machines for "Startup error" openvpn service
- if [[ "$(hostnamectl | grep -i Virtualization | awk '{print $2}' | head -n1)" == 'openvz' ]]; then
- sed -i 's|LimitNPROC|#LimitNPROC|g' /lib/systemd/system/openvpn*
- systemctl daemon-reload
-fi
+ # Getting some OpenVPN plugins for unix authentication
+ wget -qO /etc/openvpn/b.zip 'https://raw.githubusercontent.com/Bonveio/BonvScripts/master/openvpn_plugin64'
+ unzip -qq /etc/openvpn/b.zip -d /etc/openvpn
+ rm -f /etc/openvpn/b.zip
 #unzip server.crt.gz
 gunzip /usr/share/doc/openvpn/examples/sample-keys/server.crt.gz
+rm -Rf /usr/share/doc/openvpn/examples/sample-keys/server.crt.gz
 #make directories
 mkdir /etc/openvpn/easy-rsa/keys
-rm -Rf /usr/share/doc/openvpn/examples/sample-keys/server.crt.gz
 #Setup CA
 cat <<EOT3>> /etc/openvpn/easy-rsa/keys/ca.crt
 -----BEGIN CERTIFICATE-----
