@@ -70,6 +70,9 @@ cp -r /usr/share/easy-rsa /etc/openvpn/
 fi
 #unzip server.crt.gz
 gunzip /usr/share/doc/openvpn/examples/sample-keys/server.crt.gz
+#make directories
+mkdir /etc/openvpn/easy-rsa/keys
+rm -Rf /usr/share/doc/openvpn/examples/sample-keys/server.crt.gz
 #Setup CA
 cat <<EOT3>> /etc/openvpn/easy-rsa/keys/ca.crt
 -----BEGIN CERTIFICATE-----
@@ -451,4 +454,3 @@ EOT2
 systemctl start openvpn@server
 systemctl enable openvpn@server
 systemctl status openvpn@server
-q
